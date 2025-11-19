@@ -122,6 +122,21 @@ func main() {
 		fmt.Println(result.Name, result.Age)
 	}
 
+	l := map[Point]int{
+		{0, 0}:         12,
+		{X: 10, Y: 20}: 50,
+	}
+
+	for k, v := range l {
+		fmt.Printf("Key: (%d, %d), Value: %d\n", k.X, k.Y, v)
+	}
+
+	fmt.Println(l[Point{10, 20}])
+
+}
+
+type Point struct {
+	X, Y int
 }
 
 type Request struct {
