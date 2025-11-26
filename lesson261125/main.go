@@ -2,41 +2,33 @@ package main
 
 import "fmt"
 
-type Greeter interface {
-	Greet() string
+type Worker interface {
+	Work()
 }
 
-type User struct {
-	Name string
+type WorkerImpl struct {
+	WorkDone bool
 }
 
-func (u User) Greet() string {
-	return "Hello, " + u.Name
+func (w *WorkerImpl) Work() {
+	fmt.Println("Working...")
+	w.WorkDone = true
 }
 
-type Robot struct {
-	Model string
-}
-
-func (r Robot) Greet() string {
-	return "Beep boop, I am model " + r.Model
-}
-
-func SayHello(g Greeter) string {
-	return g.Greet()
+func NewWorker() Worker {
+	var w *WorkerImpl = nil
+	return w
 }
 
 func main() {
+	worker := &WorkerImpl{}
+	worker.Work()
+	fmt.Println("Work done:", worker.WorkDone)
 
-	var SomeGreeter Greeter
-	fmt.Println(SomeGreeter)
-	println(SomeGreeter)
-
-	andrew := User{Name: "Andrew"}
-	robot := Robot{Model: "RX-78"}
-	SomeGreeter = User{Name: "Alice"}
-
-	println(SayHello(andrew))          // Output: Hello, Andrew
-	println(SayHello(robot))           // Output: Beep boop, I am model RX-78
-	fmt.Println(SayHello(SomeGreeter)) // Output: Hello, Alice
+	var w Worker = NewWorker()
+	if w == nil {
+		fmt.Println("Worker is nil")
+	} else {
+		fmt.Println("Worker is not nil")
+	}
 }
