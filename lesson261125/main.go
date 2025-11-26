@@ -1,43 +1,34 @@
 package main
 
-type MyType struct {
-	Name string
+import "fmt"
+
+type Saver interface {
+	Save() error
 }
 
-func (MyType) Val() {
-
+type Config struct {
+	Host  string
+	Port  string
+	User  string
+	Pass  string
+	Saved bool
 }
 
-func (*MyType) Ptr() {
-
-}
-
-type V interface {
-	Val()
-}
-
-type PV interface {
-	Ptr()
+func (c Config) Save() error {
+	fmt.Println(fmt.Sprintf("%s:%s@%s:%s", c.User, c.Pass, c.Host, c.Port))
+	c.Saved = true
+	return nil
 }
 
 func main() {
-	var _ V = &MyType{}
-	var _ V = MyType{}
-	var _ PV = &MyType{}
-	// var _ PV = MyType{} // Ошибка компиляции
-	/*
-		Интерфейс V может быть реализован как указателем на MyType, так и самим MyType,
-		поскольку метод Val() имеет значение получателя.
-		Интерфейс PV может быть реализован только указателем на MyType,
-		поскольку метод Ptr() имеет указатель в качестве получателя.
-		_ {
-			type PV
-			value ptr *MyType {
-				ptr *MyType
-				method Ptr ptr
-				value MyType
-				method Val MyType
-			}
-		}
-	*/
+	var dbConfig Saver = &Config{
+		Host: "localhost",
+		Port: "5432",
+		User: "asd",
+		Pass: "asd",
+	}
+	err := dbConfig.Save()
+	if err != nil {
+		fmt.Println(err)
+	}
 }
