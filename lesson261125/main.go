@@ -2,33 +2,63 @@ package main
 
 import "fmt"
 
-type Worker interface {
-	Work()
+type Greeter interface {
+	Greet() string
 }
 
-type WorkerImpl struct {
-	WorkDone bool
+type User struct {
+	Name string
 }
 
-func (w *WorkerImpl) Work() {
-	fmt.Println("Working...")
-	w.WorkDone = true
+func (u User) Greet() string {
+	return fmt.Sprintf("Hello %s", u.Name)
 }
 
-func NewWorker() Worker {
-	var w *WorkerImpl = nil
-	return w
+func PrintGreeting(g Greeter) {
+	u, ok := g.(User)
+	if !ok {
+		fmt.Println("Greeter is a nil *User")
+		return
+	}
+	fmt.Println(u.Greet())
+}
+
+func PrintType(i interface{}) {
+	switch v := i.(type) {
+	case int:
+		fmt.Println("Type is int with value", v)
+	case string:
+		fmt.Println("Type is string with value", v)
+	case User:
+		fmt.Println("Type is User with name", v.Name)
+	default:
+		fmt.Println("Unknown type")
+	}
 }
 
 func main() {
-	worker := &WorkerImpl{}
-	worker.Work()
-	fmt.Println("Work done:", worker.WorkDone)
+	var someValue interface{} = 123
 
-	var w Worker = NewWorker()
-	if w == nil {
-		fmt.Println("Worker is nil")
+	v, ok := someValue.(int)
+	if ok {
+		fmt.Println("Value is an int:", v)
 	} else {
-		fmt.Println("Worker is not nil")
+		println("Value is not an int")
 	}
+
+	s, ok := someValue.(string)
+	if ok {
+		fmt.Println("Value is a string:", s)
+	} else {
+		println("Value is not a string")
+	}
+
+	var u User = User{Name: "Alice"}
+	PrintGreeting(u)
+
+	PrintType(u)
+
+	// var u2 User = nil
+	// PrintGreeting(u2)
+
 }
